@@ -41,3 +41,8 @@
 {%- set f = 'b' if short else 'M' -%}
     date_format({{ date }}, '%{{ f }}')
 {%- endmacro %}
+
+{%- macro clickhouse__month_name(date, short) -%}
+{%- set f = '%b' if short else '%M' -%}
+    formatDateTime(cast({{ date }} as date), '{{ f }}')
+{%- endmacro %}

@@ -15,3 +15,7 @@
 {%- macro snowflake__iso_week_end(date) -%}
 {{ dbt_date._iso_week_end(date, 'weekiso') }}
 {%- endmacro %}
+
+{%- macro clickhouse__iso_week_end(date) -%}
+toLastDayOfWeek({{ date }}, 3)
+{%- endmacro %}

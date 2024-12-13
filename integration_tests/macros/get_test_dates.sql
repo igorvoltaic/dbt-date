@@ -32,7 +32,7 @@ select
     {{ dbt_date.next_month_name(short=False) }} as next_month_name,
     {{ dbt_date.next_month_name(short=True) }} as next_month_name_short,
     cast('{{ modules.datetime.date(1997, 9, 29) }}' as date) as datetime_date,
-    cast('{{ modules.datetime.datetime(1997, 9, 29, 6, 14, 0, tzinfo=modules.pytz.timezone(var("dbt_date:time_zone"))) }}' as {{ dbt.type_timestamp() }}) as datetime_datetime
+    {{ dbt.safe_cast("'{}'".format(modules.datetime.datetime(1997, 9, 29, 6, 14, 0, tzinfo=modules.pytz.timezone(var("dbt_date:time_zone")))), api.Column.translate_type(dbt.type_timestamp())) }} as datetime_datetime
 
 union all
 
@@ -68,7 +68,7 @@ select
     {{ dbt_date.next_month_name(short=False) }} as next_month_name,
     {{ dbt_date.next_month_name(short=True) }} as next_month_name_short,
     cast('{{ modules.datetime.date(1997, 9, 29) }}' as date) as datetime_date,
-    cast('{{ modules.datetime.datetime(1997, 9, 29, 6, 14, 0, tzinfo=modules.pytz.timezone(var("dbt_date:time_zone"))) }}' as {{ dbt.type_timestamp() }}) as datetime_datetime
+    {{ dbt.safe_cast("'{}'".format(modules.datetime.datetime(1997, 9, 29, 6, 14, 0, tzinfo=modules.pytz.timezone(var("dbt_date:time_zone")))), api.Column.translate_type(dbt.type_timestamp())) }} as datetime_datetime
 
 {%- endmacro %}
 
@@ -165,4 +165,21 @@ select
 {% macro spark__get_test_timestamps() -%}
     {{ return(['2021-06-07 07:35:20.000000',
                 '2021-06-07 14:35:20.000000']) }}
+{%- endmacro %}
+
+{% macro clickhouse__get_test_timestamps() -%}
+    {{ return(['2021-06-07 07:35:20.000000',
+                '2021-06-07 14:35:20.000000']) }}
+{%- endmacro %}
+
+{%- macro clickhouse__type_timestamp() -%}
+  {{ 'DateTime64' }}
+{%- endmacro %}
+
+{%- macro clickhouse__safe_cast(value, dtype) -%}
+    {%- if not dtype == dbt.type_timestamp() -%}
+    {{ dbt.safe_cast(value, dtype) }}
+    {%- else -%}
+    parseDateTime64BestEffort({{ value }})
+    {%- endif -%}
 {%- endmacro %}

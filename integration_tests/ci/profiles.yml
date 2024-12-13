@@ -55,4 +55,14 @@ integration_tests:
       timezone: UTC
       threads: 4
 
+    clickhouse:
+      type: clickhouse
+      host: localhost
+      port: 8123
+      user: ""
+      password: ""
+      dbname: default
+      schema: default
+      threads: 5
+
   target: postgres

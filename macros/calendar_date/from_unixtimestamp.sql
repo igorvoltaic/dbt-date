@@ -82,3 +82,21 @@
     {% endif -%}
     cast(to_timestamp({{ epochs }}) at time zone 'UTC' as timestamp)
 {%- endmacro %}
+
+{%- macro clickhouse__from_unixtimestamp(epochs, format) -%}
+    {%- if format == "seconds" -%}
+        toDateTime({{ epochs }})
+    {%- elif format == "milliseconds" -%}
+        fromUnixTimestamp64Milli({{ epochs }})
+    {%- elif format == "microseconds" -%}
+        fromUnixTimestamp64Micro({{ epochs }})
+    {%- elif format == "nanoseconds" -%}
+        fromUnixTimestamp64Nano({{ epochs }})
+    {%- else -%}
+    {{ exceptions.raise_compiler_error(
+        "value " ~ format ~ " for `format` for from_unixtimestamp is not supported."
+        )
+    }}
+    {% endif -%}
+
+{%- endmacro %}

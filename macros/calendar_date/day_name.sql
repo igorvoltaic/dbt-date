@@ -53,3 +53,8 @@
 {%- set f = 'a' if short else 'W' -%}
     date_format({{ date }}, '%{{ f }}')
 {%- endmacro %}
+
+{%- macro clickhouse__day_name(date, short) -%}
+{%- set f = '%a' if short else '%W' -%}
+    formatDateTime(cast({{ date }} as date), '{{ f }}')
+{%- endmacro %}

@@ -5,7 +5,7 @@ i=1;
 for t in "$@"
 do
 
-    dbt build -t $t
+    dbt build -t $t -x -f
 
 done
 

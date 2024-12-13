@@ -68,7 +68,7 @@ models:
         - expression_is_true:
             expression: "datetime_date = cast('{{ dbt_date.date(1997, 9, 29) }}' as date)"
         - expression_is_true:
-            expression: "datetime_datetime = cast('{{ dbt_date.datetime(1997, 9, 29, 6, 14) }}' as {{ dbt.type_timestamp() }})"
+            expression: "datetime_datetime = {{ dbt.safe_cast(\"'{}'\".format(dbt_date.datetime(1997, 9, 29, 6, 14)), api.Column.translate_type(dbt.type_timestamp())) }}"
 
 
     columns:

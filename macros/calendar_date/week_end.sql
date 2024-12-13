@@ -20,3 +20,7 @@
 {%- macro duckdb__week_end(date) -%}
 {{ return(dbt_date.postgres__week_end(date)) }}
 {%- endmacro %}
+
+{%- macro clickhouse__week_end(date) -%}
+toLastDayOfWeek({{ date }})
+{%- endmacro %}

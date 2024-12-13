@@ -24,3 +24,7 @@ cast({{ dbt.dateadd('day', -1, dbt.date_trunc('week', dbt.dateadd('day', 1, date
 {%- macro duckdb__week_start(date) -%}
 {{ return(dbt_date.postgres__week_start(date)) }}
 {%- endmacro %}
+
+{%- macro clickhouse__week_start(date) -%}
+toStartOfWeek({{ date }})
+{%- endmacro %}
